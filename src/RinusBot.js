@@ -100,6 +100,50 @@ clientDiscord.on("message", function(message) {
     if (message.content === '$meme'){
         postSmugAnimeFace(message);
     }
+
+    if (message.content === '$bananen'){
+            var voiceChannel = message.member.voiceChannel;
+            if(voiceChannel){
+                message.channel.send({ embed: {
+                    color: config.options.embedColour,
+                    title: 'BANNNNAAAANNNEEENNNN!'
+                }});
+                voiceChannel.leave();
+                voiceChannel.join().then(connection =>{
+                    const dispatcher = connection.playFile('./BANANEN.mp3');
+                    dispatcher.on("end", end => {voiceChannel.leave();});
+                }).catch(err => console.log(err));
+            } else {
+                message.channel.send({ embed: {
+                    color: config.options.embedColour,
+                    title: 'I even don\'t know where I should say BANANEN fucking idiot !'
+                }});
+                console.log("error");
+            }
+           
+    }
+
+    if (message.content === '$ah'){
+        var voiceChannel = message.member.voiceChannel;
+        if(voiceChannel){
+            message.channel.send({ embed: {
+                color: config.options.embedColour,
+                title: 'AAAAAAAAHHHHHHHHHHHHHHHHHHHHHHHHHHHHH!'
+            }});
+            voiceChannel.leave();
+            voiceChannel.join().then(connection =>{    
+                const dispatcher = connection.playFile('./AHHHHH.mp3');
+                dispatcher.on("end", end => {voiceChannel.leave();});
+            }).catch(err => console.log(err));
+        } else {
+            message.channel.send({ embed: {
+                color: config.options.embedColour,
+                title: 'Fucking idiot !'
+            }});
+            console.log("error");
+        }
+       
+}
   });
 
 clientDiscord.login(global.config.keys.discord);

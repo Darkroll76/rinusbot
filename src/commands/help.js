@@ -14,10 +14,7 @@ exports.run = async function (client, msg, args) {
             title: 'Help',
             description: commands.map(c => c.replace('.js', '')).sort().join(', '),
             fields: [
-                { name: 'Aliases', value: `\`\`\`\n${aliases}\n\`\`\``, inline: true },
-                { name: 'Support', value: 'Need help with JukeBot? [Join Here!](https://discord.gg/xvtH2Yn)\n\n' +
-                                          '**Getting Started**\n1. Join a voicechannel\n2. $play <YouTube URL/Query | Soundcloud URL>\n3. If prompted, select a song (1-3)\n\n' +
-                                          `View command info with ${config.options.prefix}help <command>`, inline: true }
+                { name: 'Aliases', value: `\`\`\`\n${aliases}\n\`\`\``, inline: true }
             ]
         }});
 

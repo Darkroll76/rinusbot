@@ -9,5 +9,6 @@
 	"r"  : "resume",
 	"ps" : "pause",
 	"v" : "volume",
+	"m" : "meme",
 	"vcr": "voicereset"
 }
