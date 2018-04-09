@@ -1,0 +1,18 @@
+{
+
+	"keys" : {
+		"discord"    : "NDMxMjAzNjI3NDcwNjg0MTcw.DabVWg.RK-S3Bng8l4XDcJtG5PbtD_vh8M",
+		"youtube"    : "AIzaSyBzD3mb2smKdGGLdkXqtmHAv2RaI7RY1Hk",
+		"soundcloud" : ""
+	},
+	"options" : {
+		"embedColour" : 2003199,
+		"yellow" : 16776734,
+		"prefix"      : "$"
+	},
+	"prop" : {
+		"owners"   : [],
+		"blocked"  : []
+	}
+
+}

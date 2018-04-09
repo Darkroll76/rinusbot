@@ -1,0 +1,23 @@
+{
+  "name": "rinus",
+  "version": "5.2.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "cd src && node ./RinusBot.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/CrimsonXV/JukeBot/JukeBot.git"
+  },
+  "author": "Kromatic",
+  "license": "AGPL-3.0",
+  "dependencies": {
+    "discord.js": "^11.3.2",
+    "eris": "*",
+    "opusscript": "*",
+    "request": "^2.85.0",
+    "ytdl-core": "*"
+  }
+}
