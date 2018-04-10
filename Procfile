@@ -1,1 +1,1 @@
-worker: node src/RinusBot.js
+worker node src/RinusBot.js
