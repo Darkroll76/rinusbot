@@ -22,7 +22,7 @@ Object.defineProperty(Eris.TextChannel.prototype, 'awaitMessages', {
     }
 });
 
-global.guilds   = {};
+global.guilds = {};
 
 client.on('ready', async () => {
     console.log(`[RinusBot] Ready! (User: ${client.user.username})`);
@@ -110,7 +110,7 @@ clientDiscord.on("message", function(message) {
                 }});
                 voiceChannel.leave();
                 voiceChannel.join().then(connection =>{
-                    const dispatcher = connection.playFile('./BANANEN.mp3');
+                    const dispatcher = connection.playFile('BANANEN.mp3');
                     dispatcher.on("end", end => {voiceChannel.leave();});
                 }).catch(err => console.log(err));
             } else {
@@ -132,7 +132,7 @@ clientDiscord.on("message", function(message) {
             }});
             voiceChannel.leave();
             voiceChannel.join().then(connection =>{    
-                const dispatcher = connection.playFile('./AHHHHH.mp3');
+                const dispatcher = connection.playFile('AHHHHH.mp3');
                 dispatcher.on("end", end => {voiceChannel.leave();});
             }).catch(err => console.log(err));
         } else {
