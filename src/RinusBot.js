@@ -149,7 +149,7 @@ clientDiscord.on("message", async message => {
             }});
             voiceChannel.leave();
             voiceChannel.join().then(connection =>{    
-                const dispatcher = connection.play('./AHHHHH.mp3');
+                const dispatcher = connection.playFile('./AHHHHH.mp3');
                 dispatcher.on("end", end => {voiceChannel.leave();});
             }).catch(err => console.log(err));
         } else {
