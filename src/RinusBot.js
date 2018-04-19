@@ -96,12 +96,29 @@ function postSmugAnimeFace(cmd) {
     });
 }
 
-clientDiscord.on("message", function(message) {
+clientDiscord.on("message", async message => {
+    if (!message.guild) return;
+    
     if (message.content === '$meme'){
         postSmugAnimeFace(message);
     }
 
     if (message.content === '$bananen'){
+        // if (message.member.voiceChannel) {
+        //     message.channel.send({ embed: {
+        //         color: config.options.embedColour,
+        //         title: 'BANNNNAAAANNNEEENNNN!'
+        //     }});
+        //     const connection = await message.member.voiceChannel.join();
+        //     const dispatcher = connection.play('/BANANEN.mp3');
+        //     dispatcher.on('finish', () => {
+        //         console.log('Finished playing!');
+        //       });
+              
+        //       dispatcher.destroy(); // end the stream
+        //   } else {
+        //     message.reply('You need to join a voice channel first!');
+        //   }
             var voiceChannel = message.member.voiceChannel;
             if(voiceChannel){
                 message.channel.send({ embed: {
@@ -110,7 +127,7 @@ clientDiscord.on("message", function(message) {
                 }});
                 voiceChannel.leave();
                 voiceChannel.join().then(connection =>{
-                    const dispatcher = connection.playFile(';/BANANEN.mp3');
+                    const dispatcher = connection.playFile('./BANANEN.mp3');
                     dispatcher.on("end", end => {voiceChannel.leave();});
                 }).catch(err => console.log(err));
             } else {
@@ -132,7 +149,7 @@ clientDiscord.on("message", function(message) {
             }});
             voiceChannel.leave();
             voiceChannel.join().then(connection =>{    
-                const dispatcher = connection.playFile('./AHHHHH.mp3');
+                const dispatcher = connection.play('./AHHHHH.mp3');
                 dispatcher.on("end", end => {voiceChannel.leave();});
             }).catch(err => console.log(err));
         } else {

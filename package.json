@@ -19,6 +19,8 @@
     "ffmpeg-binaries": "^3.2.2-3",
     "opusscript": "*",
     "request": "^2.85.0",
+    "superagent": "^3.8.2",
+    "tar.gz": "^1.0.7",
     "ytdl-core": "*"
   }
 }
