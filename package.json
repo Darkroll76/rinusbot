@@ -16,9 +16,7 @@
   "dependencies": {
     "discord.js": "^11.3.2",
     "eris": "*",
-    "ffmpeg": "0.0.4",
     "ffmpeg-binaries": "^3.2.2-3",
-    "fluent-ffmpeg": "^2.1.2",
     "opusscript": "*",
     "request": "^2.85.0",
     "ytdl-core": "*"
