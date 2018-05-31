@@ -141,7 +141,7 @@ clientDiscord.on("message", async message => {
         } else {
             message.channel.send({ embed: {
                 color: config.options.embedColour,
-                title: 'Fucking idiot !'
+                title: 'I even don\'t know where I should say AH ! Fucking idiot !'
             }});
             console.log("error");
         }
