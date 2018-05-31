@@ -105,21 +105,6 @@ clientDiscord.on("message", async message => {
     }
 
     if (message.content === '$bananen'){
-        // if (message.member.voiceChannel) {
-        //     message.channel.send({ embed: {
-        //         color: config.options.embedColour,
-        //         title: 'BANNNNAAAANNNEEENNNN!'
-        //     }});
-        //     const connection = await message.member.voiceChannel.join();
-        //     const dispatcher = connection.play('/BANANEN.mp3');
-        //     dispatcher.on('finish', () => {
-        //         console.log('Finished playing!');
-        //       });
-              
-        //       dispatcher.destroy(); // end the stream
-        //   } else {
-        //     message.reply('You need to join a voice channel first!');
-        //   }
             var voiceChannel = message.member.voiceChannel;
             if(voiceChannel){
                 message.channel.send({ embed: {
@@ -156,7 +141,7 @@ clientDiscord.on("message", async message => {
         } else {
             message.channel.send({ embed: {
                 color: config.options.embedColour,
-                title: 'I even don\'t know where I should say AH !Fucking idiot !'
+                title: 'Fucking idiot !'
             }});
             console.log("error");
         }
@@ -174,6 +159,35 @@ client.on('messageCreate', async (msg) => {
             color: config.options.yellow,
             title: `:banana::banana: BANANEN ${msg.author.username.toUpperCase()} !! :banana::banana:`,
         }});
+    }
+
+    if (msg.mentions.find(m => m.id === client.user.id) && msg.content.toLowerCase().includes('help'))
+        return msg.channel.createMessage({ embed: {
+            color: config.options.embedColour,
+            title: `Use ${config.options.prefix}help for commands`
+        }});
+
+    if (!msg.content.startsWith(config.options.prefix) || !msg.channel.hasPermissions(client.user.id, 'sendMessages', 'embedLinks')) return;
+
+    let command = msg.content.slice(config.options.prefix.length).toLowerCase().split(' ')[0];
+    const args  = msg.content.split(' ').slice(1);
+    console.log(`${msg.author.username} > ${msg.content}`);
+
+    delete require.cache[require.resolve('./aliases.json')];
+    const aliases = require('./aliases.json');
+    if (aliases[command]) command = aliases[command];
+
+    try {
+        delete require.cache[require.resolve(`./commands/${command}`)];
+        require(`./commands/${command}`).run(client, msg, args);
+    } catch(e) {
+        if (e.message.includes('Cannot find module') || e.message.includes('ENOENT')) return;
+        msg.channel.createMessage({ embed: {
+            color: config.options.embedColour,
+            title: `${command} failed`,
+            description: 'The command failed to run. The error has been logged.'
+        }});
+        console.error(`[ERROR] ${e.message}\n${e.stack.split('\n')[0]}\n${e.stack.split('\n')[1]}`);
     }
 });
 
