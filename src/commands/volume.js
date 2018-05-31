@@ -30,17 +30,15 @@ exports.run = async function (client, msg, args) {
         }});
 
         const query = args.join(' ').replace(/<|>/g, '');
-        console.log(query);
 
         const volume = parseInt(query)/100;
-        console.log(volume);
 
         return msg.channel.createMessage({ embed: {
             color: config.options.embedColour,
             title: 'Volume',
             description: `:speaker: ${query} %`
         }});
-
+        console.log(client.voiceConnections.get(msg.channel.guild.id).volume());
         client.voiceConnections.get(msg.channel.guild.id).setVolume(volume);  
 };
 

@@ -1,6 +1,6 @@
 {
   "name": "rinus",
-  "version": "5.2.0",
+  "version": "5.3.0",
   "description": "",
   "main": "index.js",
   "scripts": {
@@ -9,10 +9,9 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/CrimsonXV/JukeBot/JukeBot.git"
+    "url": "https://github.com/Darkroll76/rinusbot.git"
   },
-  "author": "Kromatic",
-  "license": "AGPL-3.0",
+  "author": "Darkroll",
   "dependencies": {
     "discord.js": "^11.3.2",
     "eris": "*",

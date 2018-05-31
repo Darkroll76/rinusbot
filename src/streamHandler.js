@@ -15,6 +15,7 @@ exports.play = async function play(guild, client) {
     const trackURL = guild.queue[0].src === 'youtube'
         ? await ytutil.getFormats(guild.queue[0].id)
         : guild.queue[0].id;
+    const format = guild.queue[0].src === 'youtube' ? 'webm' : null;
 
     if (guild.queue[0].src === 'youtube') {
         guild.queue[0].duration = await ytutil.getDuration(guild.queue[0].id);
@@ -29,13 +30,15 @@ exports.play = async function play(guild, client) {
         return exports.play(guild, client);
     }
 
-    client.getChannel(guild.msgc).createMessage({embed: {
+    client.getChannel(guild.msgc).createMessage({ embed: {
         color: config.options.embedColour,
         title: 'Now Playing',
         description: `${guild.queue[0].title}` //(https://youtu.be/${guild.queue[0].id})`
     }});
 
-    client.voiceConnections.get(guild.id).play(trackURL, { format: 'webm' });
+    const inlineVolume = true;
+
+    client.voiceConnections.get(guild.id).play(trackURL, { format, inlineVolume });
 
     client.voiceConnections.get(guild.id).once('end', () => {
         if (guild.repeat === 'All') guild.queue.push(guild.queue[0]);

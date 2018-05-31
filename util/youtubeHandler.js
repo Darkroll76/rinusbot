@@ -12,14 +12,14 @@ module.exports = {
             maxResults: 1,
             part: 'snippet',
             key,
-        })
-        .catch((error) => console.error(error));
-        return results.items;
+        }).catch(() => null);
+
+        return results ? results.items : [];
     },
 
     async getPlaylist(playlistId, limit = 100, pageToken, videos = []) {
 
-        const result = await req.get('https://www.googleapis.com/youtube/v3/playlistItems', {
+        const request = await req.get('https://www.googleapis.com/youtube/v3/playlistItems', {
             maxResults    : 50,
             part          : 'snippet',
             nextPageToken : null,
@@ -28,17 +28,17 @@ module.exports = {
             key
         }).catch(() => null);
 
-        if (!result || !result.body || result.body.items.length === 0)
+        if (!request || request.items.length === 0)
             return videos;
 
-        for (const video of result.body.items)
+        for (const video of request.items)
             videos.push({ id: video.snippet.resourceId.videoId, title: video.snippet.title });
 
         if (videos.length >= limit)
             return videos.slice(0, limit);
 
-        if (result.body.nextPageToken)
-            return await module.exports.getPlaylist(id, limit, result.body.nextPageToken, videos);
+        if (request.nextPageToken)
+            return await module.exports.getPlaylist(playlistId, limit, request.nextPageToken, videos);
 
         return videos;
     },
@@ -49,10 +49,10 @@ module.exports = {
             part : 'snippet',
             id,
             key
-        }).catch(() => { body: { items: []}});
+        }).catch(() => null);
 
-        if (result.body.items.length === 0) return [];
-        return [{ id: result.body.items[0].id, title: result.body.items[0].snippet.title }];
+        if (!result || result.items.length === 0) return [];
+        return [{ id: result.items[0].id, title: result.items[0].snippet.title }];
     },
 
     async getFormats(id) {
@@ -70,29 +70,21 @@ module.exports = {
     },
 
     async getDuration(id) {
-        const result = await req.get('https://www.googleapis.com/youtube/v3/videos', {
-            part : 'contentDetails',
-            id,
-            key
-        }).catch(() => null);
-
-        if (!result || !result.body || result.body.items.length === 0)
-            return 0;
-
-        return module.exports.getSeconds(result.body.items[0].contentDetails.duration);
-    },
-
-    getSeconds(duration) {
-        const match   = duration.match(/PT(\d+H)?(\d+M)?(\d+S)?/);
-
-        if (!match)
-            return 0;
-
-        const hours   = parseInt(match[1]) || 0;
-        const minutes = parseInt(match[2]) || 0;
-        const seconds = parseInt(match[3]) || 0;
-
-        return `${hours}:${minutes}:${seconds}`;
+        const info = await yt.getInfo(id);
+        return info.length_seconds * 1000;
     }
+
+    // getSeconds(duration) {
+    //     const match   = duration.match(/PT(\d+H)?(\d+M)?(\d+S)?/);
+
+    //     if (!match)
+    //         return 0;
+
+    //     const hours   = parseInt(match[1]) || 0;
+    //     const minutes = parseInt(match[2]) || 0;
+    //     const seconds = parseInt(match[3]) || 0;
+
+    //     return `${hours}:${minutes}:${seconds}`;
+    // }
 
 };

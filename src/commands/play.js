@@ -53,10 +53,11 @@ exports.run = async function (client, msg, args) {
     const query = args.join(' ').replace(/<|>/g, '');
     const ytrxm = query.match(ytrx);
     const scrxm = query.match(scrx);
+    const url = ytrxm ? ytrxm[0] : scrxm ? scrxm[0] : query;
 
     const res = {};
 
-    if ((!ytrxm || !ytrxm[1]) && (!scrxm || !scrxm[1])) {
+    if ((!ytrxm || !ytrxm[0]) && (!scrxm || !scrxm[0])) {
 
         if (!config.keys.youtube) {
             if (client.voiceConnections.isConnected(msg.channel.guild.id) && guild.queue.length === 0) client.leaveVoiceChannel(client.voiceConnections.get(msg.channel.guild.id).channelID);
@@ -96,15 +97,6 @@ exports.run = async function (client, msg, args) {
 
         } else {
 
-            if (!config.keys.soundcloud) {
-                if (client.voiceConnections.isConnected(msg.channel.guild.id) && guild.queue.length === 0) client.leaveVoiceChannel(client.voiceConnections.get(msg.channel.guild.id).channelID);
-                return msg.channel.createMessage({ embed: {
-                    color: config.options.embedColour,
-                    title: 'No SoundCloud key specified',
-                    description: 'No SoundCloud key was configured in `config.json`. SoundCloud not available.'
-                }});
-            }
-
             res.src = 'soundcloud';
             res.type = 'soundcloud';
             res.items = await scutil.getTrack(query);
@@ -121,9 +113,15 @@ exports.run = async function (client, msg, args) {
         }});
     }
 
+    res.items.forEach(track => {
+        track.req = msg.author.id;
+        track.permalink = res.src === 'youtube' ? `https://youtube.com/watch?v=${track.id}` : url;
+        track.src = res.src;
+    });
+
     if (res.type !== 'search') {
 
-        res.items.map(v => guild.queue.push({ id: v.id, title: v.title, req: msg.author.id, src: res.src, durl: res.src === 'soundcloud' ? scrxm[1] : undefined }));
+        res.items.forEach(v => guild.queue.push(v));
         const embed = {
             color: config.options.embedColour,
             title: `Enqueued ${res.items[0].title}`
@@ -151,8 +149,15 @@ exports.run = async function (client, msg, args) {
         // }
 
         // if (msg.channel.permissionsOf(client.user.id).has('manageMessages')) selected.delete();
-        guild.queue.push({ id: res.items[0].id.videoId, title: res.items[0].snippet.title, req: msg.author.id, src: 'youtube' });
-        console.log(guild.queue.length);
+        
+        guild.queue.push({ 
+            id: res.items[0].id.videoId, 
+            title: res.items[0].snippet.title, 
+            req: msg.author.id, 
+            src: 'youtube',
+            permalink: 'https://youtube.com/watch?v=${res.items[0].id.videoId}' 
+        });
+
         if(guild.queue.length > 1){
             const src = await msg.channel.createMessage({ embed: {
                 color: config.options.embedColour,

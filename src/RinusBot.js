@@ -1,5 +1,7 @@
 global.config       = require('./config.json');
 
+const https = require('https');
+const sch       = require('../util/soundcloudHandler.js');
 const extras    = require('../util/extras.js');
 const collector = require('../util/messageCollector.js');
 const Eris      = require('../util/extensionLoader.js')(require('eris'));
@@ -15,6 +17,7 @@ const client = new Eris.Client(config.keys.discord, {
 });
 
 client.messageCollector = new collector(client);
+sch.updateClientID();
 
 Object.defineProperty(Eris.TextChannel.prototype, 'awaitMessages', {
     async value(predicate, options = {}) {
@@ -26,7 +29,7 @@ global.guilds = {};
 
 client.on('ready', async () => {
     console.log(`[RinusBot] Ready! (User: ${client.user.username})`);
-    client.editStatus('online', { name: `${config.options.prefix}help` });
+    client.editStatus('online', { name: `bananen !` });
 
     client.guilds.forEach(g => {
         if (!guilds[g.id])
@@ -44,8 +47,6 @@ client.on('guildCreate', async (g) => {
 client.on('guildDelete', async (g) => {
     delete guilds[g.id];
 });
-
-const https = require('https');
 
 function getRequestJson(options, callback) {
     const req = https.get(options, (res) => {
@@ -99,7 +100,7 @@ function postSmugAnimeFace(cmd) {
 clientDiscord.on("message", async message => {
     if (!message.guild) return;
     
-    if (message.content === '$meme'){
+    if (message.content === '$meme' || message.content === '$m'){
         postSmugAnimeFace(message);
     }
 
@@ -155,7 +156,7 @@ clientDiscord.on("message", async message => {
         } else {
             message.channel.send({ embed: {
                 color: config.options.embedColour,
-                title: 'Fucking idiot !'
+                title: 'I even don\'t know where I should say AH !Fucking idiot !'
             }});
             console.log("error");
         }
@@ -166,45 +167,13 @@ clientDiscord.on("message", async message => {
 clientDiscord.login(global.config.keys.discord);
 
 client.on('messageCreate', async (msg) => {
+    if (msg.isFromDM || msg.author.bot || !guilds[msg.channel.guild.id] || (msg.member && msg.member.isBlocked)) return;
 
     if (msg.content.toLowerCase() === 'hey rinus !' || msg.content.toLowerCase() === 'hi rinus !' || msg.content.toLowerCase() === 'hi rinus' || msg.content.toLowerCase() === 'hey rinus' || msg.content.toLowerCase() === 'rinus'){
         msg.channel.createMessage({ embed: {
             color: config.options.yellow,
             title: `:banana::banana: BANANEN ${msg.author.username.toUpperCase()} !! :banana::banana:`,
         }});
-    }
-
-    
-
-    if (msg.isFromDM || msg.author.bot || !guilds[msg.channel.guild.id] || (msg.member && msg.member.isBlocked)) return;
-
-    if (msg.mentions.find(m => m.id === client.user.id) && msg.content.toLowerCase().includes('help'))
-        return msg.channel.createMessage({ embed: {
-            color: config.options.embedColour,
-            title: `Use ${config.options.prefix}help for commands`
-        }});
-
-    if (!msg.content.startsWith(config.options.prefix) || !msg.channel.hasPermissions(client.user.id, 'sendMessages', 'embedLinks')) return;
-
-    let command = msg.content.slice(config.options.prefix.length).toLowerCase().split(' ')[0];
-    const args  = msg.content.split(' ').slice(1);
-    console.log(`${msg.author.username} > ${msg.content}`);
-
-    delete require.cache[require.resolve('./aliases.json')];
-    const aliases = require('./aliases.json');
-    if (aliases[command]) command = aliases[command];
-
-    try {
-        delete require.cache[require.resolve(`./commands/${command}`)];
-        require(`./commands/${command}`).run(client, msg, args);
-    } catch(e) {
-        if (e.message.includes('Cannot find module') || e.message.includes('ENOENT')) return;
-        msg.channel.createMessage({ embed: {
-            color: config.options.embedColour,
-            title: `${command} failed`,
-            description: 'The command failed to run. The error has been logged.'
-        }});
-        console.error(`[ERROR] ${e.message}\n${e.stack.split('\n')[0]}\n${e.stack.split('\n')[1]}`);
     }
 });
 
